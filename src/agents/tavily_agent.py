@@ -1,6 +1,6 @@
 from langchain_openai import ChatOpenAI
 from langchain_tavily import TavilySearch
-from src.prompts.system import system_prompt_template
+from src.prompts.system import tavily_agent_prompt
 from langchain_core.tools import tool
 from langgraph.types import Command
 from langgraph.prebuilt import InjectedState
@@ -67,4 +67,4 @@ model = ChatOpenAI(
 
 tools = [tavily_search_tool]
 model_with_tools = model.bind_tools(tools)
-tavily_agent = system_prompt_template | model_with_tools
+tavily_agent = tavily_agent_prompt | model_with_tools
