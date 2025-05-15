@@ -14,9 +14,11 @@ from src.graph.graph import create_chat_graph
 from langchain_core.messages import HumanMessage
 
 
+graph = create_chat_graph()
+
 
 if __name__ == "__main__":
-    graph = create_chat_graph()
+    
 
     config = {"configurable": {"thread_id": 0}}
 
