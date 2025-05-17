@@ -88,3 +88,4 @@ Endpoint para verificaciones de salud.
   "status": "healthy"
 }
 ```
+
