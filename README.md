@@ -26,11 +26,7 @@ Este proyecto implementa un agente LLM basado en LangGraph y expone su funcional
 El proyecto utiliza las siguientes variables de entorno:
 
 ```
-# Obligatorias
-OPENAI_API_KEY=sk-...
-TAVILY_API_KEY=tvly-...
-
-# LangSmith (opcionales, para tracing)
+# LangSmith (para tracing)
 LANGSMITH_TRACING=true
 LANGSMITH_ENDPOINT=https://api.smith.langchain.com
 LANGSMITH_API_KEY=ls-...
