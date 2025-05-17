@@ -17,7 +17,9 @@ def invoke_graph(message: str, config_metadata: dict):
 
 
     result = graph.invoke(
-        {"messages": [HumanMessage(content=message)]},
+        {"messages": [HumanMessage(content=message)],
+         "query": message
+        },
         config
     )
     return result

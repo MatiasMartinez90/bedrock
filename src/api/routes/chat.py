@@ -1,13 +1,10 @@
 #route FASTAPI
 
-from fastapi import APIRouter, HTTPException, Request
-from pydantic import BaseModel, Field, field_validator
-from langchain_core.messages import HumanMessage
-from src.graph.graph import create_chat_graph
+from fastapi import APIRouter, HTTPException
 from src.utils.logging_config import get_logger
-from typing import Optional, Dict, Any
 from src.api.models.base import ChatRequest, ChatResponse
 from src.api.services.graph import invoke_graph
+
 # Obtener logger para este módulo
 logger = get_logger(__name__)
 

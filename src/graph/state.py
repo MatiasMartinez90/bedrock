@@ -9,23 +9,18 @@ def add_query_history(query_history: list, query: list) -> list:
     query_history.append(query)
     return query_history
 
+#merge two lists of docs
+def add_docs(docs1: list, docs2: list) -> list:
+    return docs1 + docs2
 
-
-def add_retrieved_results(retrieved_results: dict, results: dict) -> dict:
-    retrieved_results.update(results)
-    return retrieved_results
-
-def add_agent_route(agent_route: list, agent: str) -> list:
-    agent_route.append(agent)
-    return agent_route
 
 class State(TypedDict):
     "Estado del grafo"
     messages: Annotated[list, add_messages]
+    query: str
     query_history: Annotated[list, add_query_history]
-    retrieved_results: Annotated[dict, add_retrieved_results]
-    current_agent: str
-    agent_route: Annotated[list, add_agent_route]
+    docs: Annotated[list, add_docs]
+    response: str
 
 
 

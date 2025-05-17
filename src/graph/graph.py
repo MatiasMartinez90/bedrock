@@ -1,15 +1,10 @@
 from src.graph.state import State
 from langgraph.graph import StateGraph, START, END
-
-from src.nodes.chatbot import internet_node
-from src.nodes.tool_node import tool_node
-from langgraph.prebuilt import tools_condition
-from src.utils.logging_config import get_logger
 from langgraph.checkpoint.memory import MemorySaver
 
-
-from src.nodes.router import router_node, deny_node, conditional_edges_router
-from src.nodes.conversation import conversation_node
+from src.utils.logging_config import get_logger
+from src.nodes.retrieve import retrieve_node
+from src.nodes.generate import generate_node
 
 
 
@@ -31,39 +26,15 @@ def create_chat_graph() -> StateGraph:
 
 
     #ROUTER
-    workflow.add_node("router", router_node)
-    workflow.add_edge(START, "router")
+    workflow.add_node("retrieve", retrieve_node)
+    workflow.add_edge(START, "retrieve")
 
     #CONVERSATION AGENT
-    workflow.add_node("conversation_agent", conversation_node)
+    workflow.add_node("generate_answer", generate_node)
 
-    #DENY AGENT
-    workflow.add_node("deny_agent", deny_node)
+    workflow.add_edge("retrieve", "generate_answer")
 
-    workflow.add_conditional_edges(
-        "router",
-        conditional_edges_router
-    )
-
-    workflow.add_edge("conversation_agent", END)
-    workflow.add_edge("deny_agent", END)
-
-
-
-    #REACT AGENT
-    workflow.add_node("internet_agent", internet_node)
-    workflow.add_node("search_tool", tool_node)
-    
-    workflow.add_conditional_edges(
-        "internet_agent",
-        tools_condition,
-        {
-            "tools": "search_tool",
-            END: END
-        }
-    )
-    workflow.add_edge("search_tool", "internet_agent")
-    workflow.add_edge("internet_agent", END)
+    workflow.add_edge("generate_answer", END)
 
     graph = workflow.compile(checkpointer=memory)
 

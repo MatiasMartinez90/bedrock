@@ -11,13 +11,6 @@ logger = get_logger(__name__)
 # Cargar variables de entorno
 load_dotenv()
 
-# Verificar que las claves API estén configuradas
-if os.getenv("OPENAI_API_KEY") is None:
-    raise ValueError("OPENAI_API_KEY is not set")
-
-if os.getenv("TAVILY_API_KEY") is None:
-    raise ValueError("TAVILY_API_KEY is not set")
-
 # Verificar variables de LangSmith (opcionales - solo se advierte si no están configuradas)
 if os.getenv("LANGSMITH_API_KEY") is None or os.getenv("LANGSMITH_TRACING") is None or os.getenv("LANGSMITH_PROJECT") is None:
     logger.warning("LangSmith no está configurado")

@@ -46,6 +46,7 @@ from langchain_aws.embeddings import BedrockEmbeddings
 import boto3
 from opensearchpy import RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
+from src.utils.logging_config import get_logger
 
 region = 'us-east-1'
 model_id = "amazon.titan-embed-text-v2:0"
@@ -54,8 +55,17 @@ index_name = "bedrock-knowledge-base-default-index"
 engine = "faiss"
 vector_field = "bedrock-knowledge-base-default-vector"
 text_field = "AMAZON_BEDROCK_TEXT"
-metadata_field = "AMAZON_BEDROCK_METADATA"
-search_type = "approximate_search" #script_scoring, or painless_scripting
+metadata_field = "*" #"AMAZON_BEDROCK_METADATA"
+search_type = "approximate_search" #script_scoring, or painless_scripting - approximate_search
+k_docs = 10
+terms_filter = [
+    {
+        "term": {
+            "x-amz-bedrock-kb-source-uri.keyword": "s3://ueno-rag-bronze/Beneficios ueno+-1.pdf"
+        }
+    }
+]
+active_filter = False
 
 credentials = boto3.Session().get_credentials()
 awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, 'aoss', session_token=credentials.token)
@@ -77,20 +87,23 @@ vector_store = OpenSearchVectorSearch(
     engine=engine
 )
 
+logger = get_logger(__name__)
 
-if __name__ == "__main__":
-    query = "¿Desde cuándo está vigente el Programa ueno+?"
-
+def retrieve_docs(query: str):
+    logger.info(f"Retrieving docs for query: {query}")
     docs = vector_store.similarity_search(
         query=query,
-        k=4,
+        k=k_docs,
         vector_field=vector_field,
         text_field=text_field,
         metadata_field=metadata_field,
-        search_type=search_type
+        search_type=search_type,
+        boolean_filter=terms_filter if active_filter else None 
     )
- 
-    print(docs)
+    logger.info(f"Docs retrieved: {docs}")
+    logger.info(f"Docs length: {len(docs)}")
 
+    #convertir DOCS a strings
+    docs_strings = [doc.page_content for doc in docs] #TODO: Agregar metadata
 
-
+    return docs_strings
