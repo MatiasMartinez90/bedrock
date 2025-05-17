@@ -47,10 +47,17 @@ import boto3
 from opensearchpy import RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 from src.utils.logging_config import get_logger
+import os
+
+from dotenv import load_dotenv
+load_dotenv()
+
+OPENSEARCH_URL = os.getenv("OPENSEARCH_URL")
+
 
 region = 'us-east-1'
 model_id = "amazon.titan-embed-text-v2:0"
-opensearch_url = "https://gt9iwx52nfcp60iedxa5.us-east-1.aoss.amazonaws.com/"
+opensearch_url = OPENSEARCH_URL
 index_name = "bedrock-knowledge-base-default-index"
 engine = "faiss"
 vector_field = "bedrock-knowledge-base-default-vector"
